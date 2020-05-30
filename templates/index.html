@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <title>GREEN TEAM sensors data </title>
+
+    <!-- Style -->
+    <link rel="stylesheet" href="style.css" type="text/css">
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!-- bootstrap js-->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <!-- bootstrap js-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+    <!-- our scripts -->
+    <script src="script.js" type="text/javascript"></script>
+    <script src="config.js" type="text/javascript"></script>
+
+</head>
+
+
+
+<body onload=onBodyLoad()>
+    <header>
+        <h1 class="text-center">Green team data</h1>
+    </header>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+
+            <!-- Hourly history chart -->
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h5 class="card-title">Vývoj během dne: </h5>
+                </div>
+                    <div class="canvas contrainer">
+                        <canvas id="chart0"></canvas>
+                    </div>
+              </div>
+
+              <!-- statistics -->
+              <div class="card bg-dark">
+                <div class="card-header">
+                  <h5 class="card-title"> Statistika za poslední 3 dny: </h5>
+                </div>
+                <div class="accordion" id="accordionExample">
+                  {% for i in range(len(stats["avg"])) %}
+                  <div class="card bg-dark acc-card">
+                    <div class="card-header acc-card-header" id="headingOne">
+                      <h2 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="{{'#collapse'+str(i) }}" aria-expanded="false" aria-controls="{{ 'collapse'+str(i)}}">
+                          {{ escape(stats["head"][i]) }}
+                        </button>
+                      </h2>
+                    </div>
+                    <div id="{{ 'collapse'+str(i)}}" class="collapse " aria-labelledby="headingOne" data-parent="#accordionExample">
+                      <div class="card-body">
+                        <table class="table table-sm table-dark">
+                            <thead>
+                              <tr><td scope="id">#</td></tr>
+                              <tr><td scope="id">{{ escape(stats["days"][0]) }}</td></tr>
+                              <tr><td scope="id">{{ escape(stats["days"][1]) }}</td></tr>
+                              <tr><td scope="id">{{ escape(stats["days"][2]) }}</td></tr>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>Max:</td>
+                                <td>Min:</td>
+                                <td >Avg:</td>
+                              </tr>
+                              {% for j in range(len(stats["avg"][i])) %}
+                              <tr>
+                                <td scope="id">{{ escape(stats["max"][i][j]) }} °C</td>
+
+                                <td scope="id">{{ escape(stats["min"][i][j]) }} °C</td>
+
+                                <td scope="id">{{ escape(stats["avg"][i][j]) }} °C</td>
+                              </tr>
+                              {% end %}
+
+                            </tbody>
+                          </table>
+                      </div>
+                    </div>
+                </div>
+                {% end %}
+              </div>
+            </div>
+
+            <!-- RealTime data - cards -->
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h5 class="card-title">Team Green</h5> <h6 class="status-title">Status: <b id="stat1" class="stat">waiting</b></h6>
+                    <h6>Max: <b class="statVal" id="max1"></b></h6>
+                    <h6>Min: <b class="statVal" id="min1"></b></h6>
+                    <h6>Avg: <b class="statVal" id="avg1"></b></h6>
+                    <ul id="val1"></ul>
+                </div>
+                <div class="canvas contrainer">
+                    <canvas id="chart1" height="380"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="row">
+              <div class="col-6">
+                  <div class="card bg-dark">
+                      <div class="card-header">
+                          <h5 class="card-title">Team Red</h5> <h6 class="status-title">Status: <b id="stat7" class="stat">Waiting</b></h6>
+                          <h6>Max: <b class="statVal" id="max7"></b></h6>
+                          <h6>Min: <b class="statVal" id="min7"></b></h6>
+                          <h6>Avg: <b class="statVal" id="avg7"></b></h6>
+                          <ul id="val7"></ul>
+                      </div>
+                      <div class="canvas contrainer">
+                          <canvas id="chart7" height="380"></canvas>
+                      </div>
+                  </div>
+              </div>
+                <div class="col-6">
+                    <div class="card bg-dark">
+                        <div class="card-header">
+                            <h5 class="card-title">Team Black</h5> <h6 class="status-title">Status: <b id="stat2" class="stat">Waiting</b></h6>
+                            <h6>Max: <b class="statVal" id="max2"></b></h6>
+                            <h6>Min: <b class="statVal" id="min2"></b></h6>
+                            <h6>Avg: <b class="statVal" id="avg2"></b></h6>
+                            <ul id="val2"></ul>
+                        </div>
+                        <div class="canvas contrainer">
+                            <canvas id="chart2" height="380"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="card bg-dark">
+                        <div class="card-header">
+                            <h5 class="card-title">Team Pink</h5> <h6 class="status-title">Status: <b id="stat3" class="stat">Waiting</b></h6>
+                            <h6>Max: <b class="statVal" id="max3"></b></h6>
+                            <h6>Min: <b class="statVal" id="min3"></b></h6>
+                            <h6>Avg: <b class="statVal" id="avg3"></b></h6>
+                            <ul id="val3"></ul>
+                        </div>
+                        <div class="canvas contrainer">
+                            <canvas id="chart3" height="380"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card bg-dark">
+                        <div class="card-header">
+                            <h5 class="card-title">Team Yellow</h5> <h6 class="status-title">Status: <b id="stat4" class="stat">Waiting</b></h6>
+                            <h6>Max: <b class="statVal" id="max4"></b></h6>
+                            <h6>Min: <b class="statVal" id="min4"></b></h6>
+                            <h6>Avg: <b class="statVal" id="avg4"></b></h6>
+                            <ul id="val4"></ul>
+                        </div>
+                        <div class="canvas contrainer">
+                            <canvas id="chart4" height="380"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="card bg-dark">
+                        <div class="card-header">
+                            <h5 class="card-title">Team Blue</h5> <h6 class="status-title">Status: <b id="stat5" class="stat">Waiting</b></h6>
+                            <h6>Max: <b class="statVal" id="max5"></b></h6>
+                            <h6>Min: <b class="statVal" id="min5"></b></h6>
+                            <h6>Avg: <b class="statVal" id="avg5"></b></h6>
+                            <ul id="val5"></ul>
+                        </div>
+                        <div class="canvas contrainer">
+                            <canvas id="chart5" height="380"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card bg-dark">
+                        <div class="card-header">
+                            <h5 class="card-title">Team Orange</h5> <h6 class="status-title">Status: <b id="stat6" class="stat">Waiting</b></h6>
+                            <h6>Max: <b class="statVal" id="max6"></b></h6>
+                            <h6>Min: <b class="statVal" id="min6"></b></h6>
+                            <h6>Avg: <b class="statVal" id="avg6"></b></h6>
+                            <ul id="val6"> </ul>
+                        </div>
+                        <div class="canvas contrainer">
+                            <canvas id="chart6" height="380"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<!-- Data from tornado to js ...hourly history (chart0)--->
+<script type="application/javascript">
+    data = ('{{ data }}');
+    data = JSON.parse(data.replace(/&quot;/g,'"'));
+    setHistData(data);
+</script>
+
+</html>
