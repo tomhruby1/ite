@@ -15,6 +15,10 @@ const pinkT = 'rgba(255, 64, 129, 0.3)';
 const yellowT= 'rgba(253, 216, 53, 0.3)';
 const orangeT= 'rgba(239, 108, 0, 0.3)';
 
+const textColor = "#c5c5c5";
+
+const chartLegendFontColor = textColor;
+
 /*Get rgb color from given team id*/
 function getColor(id, transparent = false){
     if(transparent){
@@ -87,7 +91,12 @@ function getHistGraphConfig(datasets, time){
           }
        }
      }]
-    }
+   },
+   legend:{
+     labels:{
+       fontColor: chartLegendFontColor
+     }
+   }
   }
 }
 
