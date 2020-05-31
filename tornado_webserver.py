@@ -1,8 +1,9 @@
 #!/usr/env/python
 # -*- coding: utf-8 -*-
+
 from __future__ import print_function
 from tornado.web import StaticFileHandler, Application as TornadoApplication
-import tornado.ioloop
+from tornado.ioloop import IOLoop
 from os.path import dirname, join as join_path
 import tornado.gen
 import json
@@ -48,7 +49,7 @@ def histStatsFromDb():
     d3 = (date.today() - timedelta(days=3)).strftime('%a')
 
     data = {"avg":[], "min":[], "max":[], "days":[d3,d2,d1]}
-    d0 = ['Green','Black','Pink','Yellow','Blue','Orange','Red']
+    d0 = ['Black','Green','Pink','Yellow','Blue','Orange','Red']
     d1 = db.search(Query)[-1]
     d2 = db.search(Query)[-2]
     d3 = db.search(Query)[-3]
@@ -58,7 +59,7 @@ def histStatsFromDb():
     data["min"] = list(zip(d3["denni_minimum"], d2["denni_minimum"], d1["denni_minimum"]))
     data["max"] = list(zip(d3["denni_maximum"], d2["denni_maximum"], d1["denni_maximum"]))
     data["head"] = d0
-    
+
     return data
 
 class MainHandler(tornado.web.RequestHandler):
@@ -80,4 +81,4 @@ if __name__ == '__main__':
     app.listen(TORNADO_PORT)
 
     # Start the server
-    tornado.ioloop.IOLoop.current().start()
+    IOLoop.current().start()
