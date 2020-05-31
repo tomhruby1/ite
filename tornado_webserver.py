@@ -1,6 +1,5 @@
 #!/usr/env/python
 # -*- coding: utf-8 -*-
-
 from __future__ import print_function
 from tornado.web import StaticFileHandler, Application as TornadoApplication
 from tornado.ioloop import IOLoop
@@ -12,7 +11,7 @@ from datetime import date, timedelta
 
 # last 24 hours data for each team(for chart0)
 def histFromDb():
-        db = TinyDB('historie.json')
+        db = TinyDB('Hour_avg.json')
         name2id ={'green':1,'black':2,'pink': 3,'yellow' : 4,'blue' : 5,'orange' : 6,'red' : 7}
         structData = {1:{"data":[], "time":[]}, 2:{"data":[], "time":[]}, 3:{"data":[], "time":[]}, 4:{"data":[], "time":[]}, 5:{"data":[], "time":[]}, 6:{"data":[], "time":[]}, 7:{"data":[], "time":[]}, "statistics":{}}
 
@@ -40,7 +39,7 @@ def histFromDb():
 #Last 3 days statistics from db for each team
 def histStatsFromDb():
     from tinydb import TinyDB, Query
-    db=TinyDB('statistika.json')
+    db=TinyDB('StatsDB.json')
     Query = Query()
 
     #getting days from date for statistics data
@@ -81,4 +80,4 @@ if __name__ == '__main__':
     app.listen(TORNADO_PORT)
 
     # Start the server
-    IOLoop.current().start()
+    tornado.ioloop.IOLoop.current().start()
