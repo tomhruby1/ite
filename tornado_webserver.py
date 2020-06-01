@@ -54,9 +54,9 @@ def histStatsFromDb():
     d3 = db.search(Query)[-3]
 
     #tuples of 3 values per day for each team
-    data["avg"] = list(zip(d3["denni_prumer"], d2["denni_prumer"], d1["denni_prumer"]))
-    data["min"] = list(zip(d3["denni_minimum"], d2["denni_minimum"], d1["denni_minimum"]))
-    data["max"] = list(zip(d3["denni_maximum"], d2["denni_maximum"], d1["denni_maximum"]))
+    data["avg"] = list(zip(d3["day_stats.avg"], d2["day_stats.avg"], d1["day_stats.avg"]))
+    data["min"] = list(zip(d3["day_stats.min"], d2["day_stats.min"], d1["day_stats.min"]))
+    data["max"] = list(zip(d3["day_stats.max"], d2["day_stats.max"], d1["day_stats.max"]))
     data["head"] = d0
 
     return data
